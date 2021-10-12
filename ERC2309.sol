@@ -2,6 +2,7 @@
 pragma solidity >=0.6.2 <0.8.0;
 
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.4.0/contracts/token/ERC721/ERC721.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.4.0/contracts/access/Ownable.sol";
 import "./ownedRanges.sol";
 
 interface IERC2309 {
@@ -13,7 +14,7 @@ interface IERC2309 {
  * @title ERC721 Non-Fungible Token Standard basic implementation
  * @dev see https://eips.ethereum.org/EIPS/eip-721
  */
-contract ERC2309 is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable, IERC2309 {
+contract ERC2309 is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable, IERC2309, Ownable {
     using SafeMath for uint256;
     using Address for address;
     using EnumerableSet for EnumerableSet.UintSet;
@@ -27,7 +28,6 @@ contract ERC2309 is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable
     
     OwnedRanges.OwnedRangesMapping private owners;
     
-
     // Mapping from token ID to approved address
     mapping (uint256 => address) private _tokenApprovals;
 
@@ -83,10 +83,10 @@ contract ERC2309 is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable
     /**
      * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
      */
-    constructor (string memory name_, string memory symbol_, string memory baseurl_) public {
+    constructor (string memory name_, string memory symbol_, string memory baseuri_) public {
         _name = name_;
         _symbol = symbol_;
-        _baseURI = baseurl_;
+        _baseURI = baseuri_;
 
         // register the supported interfaces to conform to ERC721 via ERC165
         _registerInterface(_INTERFACE_ID_ERC721);
